@@ -1,4 +1,8 @@
 //http://takinginitiative.net/2011/01/12/directx10-tutorial-9-the-geometry-shader/
+float4x4 World;
+float4x4 View;
+float4x4 Projection;
+
 
 struct PS_INPUT
 {
@@ -7,7 +11,11 @@ struct PS_INPUT
 
 float4 VShader(float4 position : POSITION) : SV_POSITION
 {
-	return position;
+    float4 worldPosition = mul(input.Position, World);
+    float4 viewPosition = mul(worldPosition, View);
+    float4 position2 = mul(viewPosition, Projection);
+
+	return position2;
 }
 
 float4 PShader(float4 position: SV_POSITION) : SV_Target

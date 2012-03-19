@@ -1,9 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using Ch0nkEngine.Cameras;
 using SlimDX;
 using SlimDX.D3DCompiler;
 using SlimDX.Direct3D11;
 using SlimDX.DXGI;
 using SlimDX.Windows;
+using Buffer = SlimDX.Direct3D11.Buffer;
 using Device = SlimDX.Direct3D11.Device;
 using Resource = SlimDX.Direct3D11.Resource;
 
@@ -11,6 +14,13 @@ namespace Ch0nkEngine
 {
     static class Program
     {
+        [StructLayout(LayoutKind.Explicit)]
+        struct ConstantBuffer
+        {
+            [FieldOffset(0)]
+            public Color4 Color;
+        }
+
         static void Main()
         {
             Device device;
@@ -19,9 +29,10 @@ namespace Ch0nkEngine
             VertexShader vertexShader;
             PixelShader pixelShader;
             GeometryShader geometryShader;
+            Camera targetCamera;
 
             var form = new RenderForm("Ch0nkEngine");
-            var description = new SwapChainDescription()
+            var description = new SwapChainDescription
             {
                 BufferCount = 2,
                 Usage = Usage.RenderTargetOutput,
@@ -42,9 +53,14 @@ namespace Ch0nkEngine
 
             // setting a viewport is required if you want to actually see anything
             var context = device.ImmediateContext;
-            var viewport = new Viewport(0.0f, 0.0f, form.ClientSize.Width, form.ClientSize.Height);
+            var viewport = new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height);
             context.OutputMerger.SetTargets(renderTarget);
             context.Rasterizer.SetViewports(viewport);
+            
+
+            targetCamera = new TargetCamera(viewport);
+            targetCamera.Position = new Vector3(1,1,1);
+            targetCamera.Target = new Vector3(1, 1, -1);
 
             // load and compile the vertex shader
             using (var bytecode = ShaderBytecode.CompileFromFile("triangle.fx", "VShader", "vs_4_0", ShaderFlags.None, EffectFlags.None))
@@ -74,7 +90,7 @@ namespace Ch0nkEngine
             context.InputAssembler.InputLayout = layout;
             context.InputAssembler.PrimitiveTopology = PrimitiveTopology.PointList;
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, 12, 0));
-
+            
             // set the shaders
             context.VertexShader.Set(vertexShader);
             context.GeometryShader.Set(geometryShader);
@@ -102,6 +118,10 @@ namespace Ch0nkEngine
 
                 context.OutputMerger.SetTargets(renderTarget);
             };
+            var buffer = new ConstantBuffer();
+
+
+            context.VertexShader.Se
 
             MessagePump.Run(form, () =>
             {

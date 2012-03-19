@@ -37,7 +37,13 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Cameras\Camera.cs" />
+    <Compile Include="Cameras\Components\CameraComponent.cs" />
+    <Compile Include="Cameras\OrthogonalCamera.cs" />
+    <Compile Include="Cameras\TargetCamera.cs" />
+    <Compile Include="GameTime.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Utils\MathExtended.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SlimDX, Version=4.0.13.43, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86" />
