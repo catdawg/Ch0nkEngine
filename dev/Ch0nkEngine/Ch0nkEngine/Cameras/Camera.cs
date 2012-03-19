@@ -16,7 +16,7 @@ namespace Ch0nkEngine.Cameras
 
         //Major properties, like the position and the target
         protected Vector3 upVector = Vector3.UnitY;
-        protected Vector3 position = new Vector3(1,1,1);
+        protected Vector3 position = new Vector3(0,0,10);
         protected Vector3 target = Vector3.Zero;
 
         //to manage the plugins

@@ -14,10 +14,12 @@ namespace Ch0nkEngine
 {
     static class Program
     {
-        [StructLayout(LayoutKind.Explicit)]
-        struct ConstantBuffer
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        struct PerFrameBuffer
         {
-            [FieldOffset(0)]
+            public Matrix World;
+            public Matrix View;
+            public Matrix Projection;
             public Color4 Color;
         }
 
@@ -30,6 +32,7 @@ namespace Ch0nkEngine
             PixelShader pixelShader;
             GeometryShader geometryShader;
             Camera targetCamera;
+            GameTime gameTime;
 
             var form = new RenderForm("Ch0nkEngine");
             var description = new SwapChainDescription
@@ -59,8 +62,11 @@ namespace Ch0nkEngine
             
 
             targetCamera = new TargetCamera(viewport);
-            targetCamera.Position = new Vector3(1,1,1);
-            targetCamera.Target = new Vector3(1, 1, -1);
+            targetCamera.Initialize();
+            targetCamera.Position = new Vector3(0, 0, 10);
+            targetCamera.Target = new Vector3(0, 0, 0);
+
+            gameTime = new GameTime();
 
             // load and compile the vertex shader
             using (var bytecode = ShaderBytecode.CompileFromFile("triangle.fx", "VShader", "vs_4_0", ShaderFlags.None, EffectFlags.None))
@@ -77,14 +83,17 @@ namespace Ch0nkEngine
                 geometryShader = new GeometryShader(device, bytecode);
 
             // create test vertex data, making sure to rewind the stream afterward
-            var vertices = new DataStream(12 * 3, true, true);
-            vertices.Write(new Vector3(-0.5f, -0.5f, 0.5f));
+            var vertices = new DataStream(12*4, true, true);
+            vertices.Write(new Vector3(-0.5f, -0.5f, 0f));
+            vertices.Write(new Vector3(-0.5f, 0.5f, 0f));
+            vertices.Write(new Vector3(0.5f, 0.5f, 0f));
+            vertices.Write(new Vector3(0.5f, -0.5f, 0f));
             vertices.Position = 0;
 
             // create the vertex layout and buffer
-            var elements = new[] { new InputElement("POSITION", 0, Format.R32G32B32_Float, 0) };
+            var elements = new[] { new InputElement("ANCHOR", 0, Format.R32G32B32_Float, 0) };
             var layout = new InputLayout(device, inputSignature, elements);
-            var vertexBuffer = new Buffer(device, vertices, 12, ResourceUsage.Default, BindFlags.VertexBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
+            var vertexBuffer = new Buffer(device, vertices, 12 * 4, ResourceUsage.Default, BindFlags.VertexBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
 
             // configure the Input Assembler portion of the pipeline with the vertex data
             context.InputAssembler.InputLayout = layout;
@@ -118,18 +127,39 @@ namespace Ch0nkEngine
 
                 context.OutputMerger.SetTargets(renderTarget);
             };
-            var buffer = new ConstantBuffer();
 
+            var cb = new PerFrameBuffer();
+            cb.World = Matrix.Identity;
+            cb.View = Matrix.Identity;
+            cb.Projection = Matrix.Identity;
 
-            context.VertexShader.Se
+            DataStream data = new DataStream(Marshal.SizeOf(typeof(PerFrameBuffer)), true, true);
 
             MessagePump.Run(form, () =>
             {
                 // clear the render target to a soothing blue
                 context.ClearRenderTargetView(renderTarget, new Color4(0.5f, 0.5f, 1.0f));
+                targetCamera.Update(gameTime);
+
+                cb.View = targetCamera.ViewMatrix;
+                cb.Projection = targetCamera.ProjectionMatrix;
+                cb.Color = new Color4(0.0f, 1.0f, 0.5f);
+                cb.World = Matrix.Translation(targetCamera.Position.X, targetCamera.Position.Y, targetCamera.Position.Z);
+
+                data.Position = 0;
+                data.Write(cb);
+                data.Position = 0;
+                var buffer = new Buffer(device, data, new BufferDescription
+                {
+                    Usage = ResourceUsage.Default,
+                    SizeInBytes = Marshal.SizeOf(typeof(PerFrameBuffer)),
+                    BindFlags = BindFlags.ConstantBuffer
+                });
+                context.VertexShader.SetConstantBuffer(buffer, 1);
+                context.PixelShader.SetConstantBuffer(buffer, 1);
 
                 // draw the triangle
-                context.Draw(3, 0);
+                context.Draw(12, 0);
                 swapChain.Present(0, PresentFlags.None);
             });
 

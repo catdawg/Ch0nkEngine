@@ -15,7 +15,9 @@ namespace Ch0nkEngine.Cameras
         {
             
             viewMatrix = Matrix.LookAtLH(position, target, UpVector);
-            projectionMatrix = Matrix.PerspectiveFovLH(MathExtended.DegreesToRadians(60), Viewport.Width / (float)Viewport.Height, 0.1f, 1000000);
+            //projectionMatrix = Matrix.PerspectiveFovLH(MathExtended.DegreesToRadians(60), Viewport.Width / (float)Viewport.Height, 0, 1000000);
+            projectionMatrix = Matrix.OrthoLH(Viewport.Width, Viewport.Height, 0, 1000000);
+        
         }
 
         public override void Update(GameTime gameTime)
@@ -24,7 +26,7 @@ namespace Ch0nkEngine.Cameras
 
             //sets up the view in case it was changed
             //if (bUpdateView)
-                viewMatrix = Matrix.LookAtLH(Position, target, UpVector);
+                viewMatrix = Matrix.LookAtLH(position, target, UpVector);
         }
     }
 }
