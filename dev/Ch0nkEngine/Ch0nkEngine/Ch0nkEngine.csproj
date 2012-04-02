@@ -41,6 +41,10 @@
     <Compile Include="Cameras\Components\CameraComponent.cs" />
     <Compile Include="Cameras\OrthogonalCamera.cs" />
     <Compile Include="Cameras\TargetCamera.cs" />
+    <Compile Include="Data\Ch0nk.cs" />
+    <Compile Include="Data\EightFoldTree.cs" />
+    <Compile Include="Data\MaterialType.cs" />
+    <Compile Include="Data\Vector3i.cs" />
     <Compile Include="GameTime.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Utils\MathExtended.cs" />
