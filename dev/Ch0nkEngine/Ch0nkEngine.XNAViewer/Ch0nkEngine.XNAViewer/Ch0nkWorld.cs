@@ -30,7 +30,7 @@ namespace Ch0nkEngine.XNAViewer
             watch.Start();
 
             EightFoldTree tree = new EightFoldTree(64,MaterialType.Dirt);
-            for/* (int i = 0; i < 64; i += 2)
+            /* for(int i = 0; i < 64; i += 2)
             {
                 for (int j = 0; j < 64; j+=2)
                 {

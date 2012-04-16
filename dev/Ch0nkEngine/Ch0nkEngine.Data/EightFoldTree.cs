@@ -36,7 +36,7 @@ namespace Ch0nkEngine.Data
             _materialType = materialType;
         }
 
-        public void Expand()
+        /*public void Expand()
         {
             _children = new EightFoldTree[2, 2, 2];
             for (int i = 0; i < 2; i++)
@@ -44,7 +44,7 @@ namespace Ch0nkEngine.Data
                     for (int k = 0; k < 2; k++)
                         _children[i, j, k] = new EightFoldTree(_middle, _materialType); //the middle of this tree is the size of a subtree
              
-        }
+        }*/
 
         /*private Vector3i[] GetIndexAndLocation(Vector3i vectorLocation)
         {
@@ -103,8 +103,10 @@ namespace Ch0nkEngine.Data
                         //Expand();
                         _children = new EightFoldTree[2, 2, 2];
 
+                    //determine the child tree index
                     Vector3i location = new Vector3i(vectorLocation.X / _middle, vectorLocation.Y / _middle, vectorLocation.Z / _middle);
 
+                    //if that index has not yet been allocated, do it now
                     if (_children[location.X, location.Y, location.Z] == null)
                         _children[location.X, location.Y, location.Z] = new EightFoldTree(_middle, _materialType);
 
