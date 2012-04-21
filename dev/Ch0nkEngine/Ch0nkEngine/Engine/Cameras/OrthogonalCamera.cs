@@ -1,27 +1,25 @@
 ﻿using SlimDX;
 using SlimDX.Direct3D11;
+using System.Windows.Forms;
 
 namespace Ch0nkEngine.Cameras
 {
     class OrthogonalCamera : Camera
     {
-        public OrthogonalCamera(Viewport viewport) 
-            : base(viewport)
+        public OrthogonalCamera() 
         {
         }
 
-        public override void Initialize()
+        public override void Load()
         {
-            
-            //projectionMatrix = Matrix.CreateOrthographic(graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, 0.1f, 10000);
+            projectionMatrix = Matrix.OrthoRH(Master.I.form.ClientSize.Width, Master.I.form.ClientSize.Height, 1f, 10000f);
             viewMatrix = Matrix.LookAtLH(position, target, UpVector);
         }
 
         public override void Update(GameTime gameTime)
         {
-            //sets up the view in case it was changed
-            //if (bUpdateView)
             viewMatrix = Matrix.LookAtLH(position, target, UpVector);
         }
+
     }
 }

@@ -24,29 +24,29 @@ namespace Ch0nkEngine
         public void Start()
         {
             _stopwatch.Start();
+            _isRunning = true;
+            _timeInLast = 0;
+            _currentDelta = 0;
         }
 
         public long ElapsedMiliseconds
         {
-            get { return _stopwatch.ElapsedMilliseconds; }
+            get { return _currentDelta; }
         }
 
         /// <summary>
         /// Updates the clock.
         /// </summary>
-        /// <returns>The time, in seconds, that elapsed since the previous update.</returns>
-        public float Update()
+        public void Update()
         {
-            float result = 0.0f;
             if (_isRunning)
             {
-                long last = _count;
-                _count = Stopwatch.GetTimestamp();
-                
-                result = (float)(_count - last) / _frequency;
+                long count = Stopwatch.GetTimestamp();
+                _currentDelta = count - _timeInLast;
+                _timeInLast = count;
+
             }
 
-            return result;
         }
 
         #endregion
@@ -55,8 +55,9 @@ namespace Ch0nkEngine
 
         private bool _isRunning;
         private readonly long _frequency;
-        private long _count;
         private Stopwatch _stopwatch;
+        private long _timeInLast;
+        private long _currentDelta;
 
         #endregion
     }
