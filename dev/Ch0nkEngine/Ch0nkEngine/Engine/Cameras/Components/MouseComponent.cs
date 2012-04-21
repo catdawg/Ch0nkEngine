@@ -64,6 +64,7 @@ namespace Ch0nkEngine.Cameras.Components
             camera.Target = camera.Position + newTargetRelative;
 
             Cursor.Position = Master.I.form.PointToScreen(new Point(Master.I.form.ClientSize.Width / 2, Master.I.form.ClientSize.Height / 2));
+            Cursor.Hide();
             mouseDelta = Vector2.Zero;
         }
 
