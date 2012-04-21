@@ -36,6 +36,19 @@ namespace Ch0nkEngine.Data
             _materialType = materialType;
         }
 
+        /*
+        public EightFoldTree(short size, String materialType)
+        {
+            _middle = (short)(size / 2);
+            _materialType = materialType;
+        }
+
+        public EightFoldTree(short size, short materialType)
+        {
+            _middle = (short)(size / 2);
+            _materialType = materialType;
+        }*/
+
         /*public void Expand()
         {
             _children = new EightFoldTree[2, 2, 2];

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Ch0nkEngine.Data;
 using Ch0nkEngine.XNAViewer.Drawing;
 using Microsoft.Xna.Framework;
@@ -17,6 +18,21 @@ namespace Ch0nkEngine.XNAViewer
         private Ch0nk _ch0nk = new Ch0nk();*/
         private DrawableBuffer _buffer;
 
+        [Serializable]
+        struct Test
+        {
+            public short p1;
+            public int p2;
+            public byte p3;
+
+            public Test(short p1, int p2, byte p3)
+            {
+                this.p1 = p1;
+                this.p2 = p2;
+                this.p3 = p3;
+            }
+        }
+
         public Ch0nkWorld(Game game)
         {
 
@@ -30,6 +46,7 @@ namespace Ch0nkEngine.XNAViewer
             watch.Start();
 
             EightFoldTree tree = new EightFoldTree(64,MaterialType.Dirt);
+            //EightFoldTree tree2 = new EightFoldTree(64, "Air");
             /* for(int i = 0; i < 64; i += 2)
             {
                 for (int j = 0; j < 64; j+=2)
@@ -40,12 +57,28 @@ namespace Ch0nkEngine.XNAViewer
                     }
                 }
             }*/
+            int count = 1000000000;
+            byte[] stuff = new byte[count];
+            for (int i = 0; i < count; i++)
+            {
+                stuff[i] = (byte)(i % 256);
+            }
+
+
+            Test[] t = new Test[count];
+            for (int i = 0; i < count; i++)
+            {
+                t[i] = new Test((short)i,i,128);
+            }
+            
 
             Console.WriteLine("Time To Set Up: " + watch.ElapsedMilliseconds + "ms");
             watch.Restart();
 
-            byte[] shortArray = Serialization.SerializeToByteArray(tree);
+            byte[] shortArray = Serialization.SerializeToByteArray(t);
             Console.WriteLine("Size: " + shortArray.Length/1024 + "Kbs");
+            Console.WriteLine("Size of Unit: " + shortArray.Length/count + "bytes");
+            Console.WriteLine("Marshall says: " + Marshal.SizeOf(typeof(byte[])));
 
             LZOCompressor compressor = new LZOCompressor();
 
