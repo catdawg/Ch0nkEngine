@@ -43,29 +43,78 @@ float4 PS( PS_IN input ) : SV_Target
 	return yodaTexture.Sample(currentSampler, input.uv);
 }
 
-[maxvertexcount(3)]
+void addFace(inout TriangleStream<PS_IN> OutputStream, float3 left_bottom, float3 right_bottom, float3 right_top, float3 left_top)
+{
+    PS_IN output;
+	output.pos = mul(float4(left_bottom, 1), finalMatrix);
+	output.uv = float2(0, 1);
+	OutputStream.Append( output );
+
+	output.pos = mul(float4(right_bottom, 1), finalMatrix);
+	output.uv = float2(1, 1);
+	OutputStream.Append( output );
+	
+	output.pos = mul(float4(right_top, 1), finalMatrix);
+	output.uv = float2(1, 0);
+	OutputStream.Append( output );
+
+	OutputStream.RestartStrip();
+
+	
+	output.pos = mul(float4(left_bottom, 1), finalMatrix);
+	output.uv = float2(0, 1);
+	OutputStream.Append( output );
+
+	output.pos = mul(float4(right_top, 1), finalMatrix);
+	output.uv = float2(1, 0);
+	OutputStream.Append( output );
+	
+	output.pos = mul(float4(left_top, 1), finalMatrix);
+	output.uv = float2(0, 0);
+	OutputStream.Append( output );
+
+	OutputStream.RestartStrip();
+}
+
+[maxvertexcount(36)]
 void GS( point GS_IN input[1], inout TriangleStream<PS_IN> OutputStream )
 {	
-    PS_IN output;
 	float3 _input;
 	
 	
 	_input = input[0].pos;
 
-	output.pos = mul(float4(_input.x + 0.1, _input.y - 0.1, _input.z , 1), finalMatrix);
-	output.uv = float2(1, 1);
-	OutputStream.Append( output );
-	
-	output.pos = mul(float4(_input.x - 0.1, _input.y - 0.1, _input.z , 1), finalMatrix);
-	output.uv = float2(0, 1);
-	OutputStream.Append( output );
-	
-	output.pos = mul(float4(_input.x, _input.y + 0.1, _input.z , 1), finalMatrix);
-	output.uv = float2(0.5, 0);
-	OutputStream.Append( output );
+	addFace(OutputStream, float3(_input.x - 1, _input.y - 1, _input.z - 1),
+					      float3(_input.x - 1, _input.y + 1, _input.z - 1),
+					      float3(_input.x + 1, _input.y + 1, _input.z - 1),
+					      float3(_input.x + 1, _input.y - 1, _input.z - 1));
 
-	
-	
+	addFace(OutputStream, float3(_input.x - 1, _input.y - 1, _input.z + 1),
+					      float3(_input.x - 1, _input.y + 1, _input.z + 1),
+					      float3(_input.x + 1, _input.y + 1, _input.z + 1),
+					      float3(_input.x + 1, _input.y - 1, _input.z + 1));
+
+	addFace(OutputStream, float3(_input.x + 1, _input.y - 1, _input.z - 1),
+					      float3(_input.x + 1, _input.y + 1, _input.z - 1),
+					      float3(_input.x + 1, _input.y + 1, _input.z + 1),
+					      float3(_input.x + 1, _input.y - 1, _input.z + 1));
+
+						  
+	addFace(OutputStream, float3(_input.x - 1, _input.y - 1, _input.z - 1),
+					      float3(_input.x - 1, _input.y - 1, _input.z + 1),
+					      float3(_input.x - 1, _input.y + 1, _input.z + 1),
+					      float3(_input.x - 1, _input.y + 1, _input.z - 1));
+
+	addFace(OutputStream, float3(_input.x - 1, _input.y + 1, _input.z - 1),
+					      float3(_input.x + 1, _input.y + 1, _input.z - 1),
+					      float3(_input.x + 1, _input.y + 1, _input.z + 1),
+					      float3(_input.x - 1, _input.y + 1, _input.z + 1));
+
+	addFace(OutputStream, float3(_input.x - 1, _input.y - 1, _input.z - 1),
+					      float3(_input.x - 1, _input.y - 1, _input.z + 1),
+					      float3(_input.x + 1, _input.y - 1, _input.z + 1),
+					      float3(_input.x + 1, _input.y - 1, _input.z - 1));
+
 }
 
 // Technique

@@ -111,10 +111,10 @@ namespace Ch0nkEngine
             */
             float[] vertices = new[]
                                     {
-                                        -1.0f, -1.0f, 0f,
-                                        1.0f, -1.0f, 0f,
-                                        1.0f, 1.0f, 0f,
-                                        -1.0f, 1.0f, 0f
+                                        -1.5f, -1.5f, 0f,
+                                        1.5f, -1.5f, 0f,
+                                        1.5f, 1.5f, 0f,
+                                        -1.5f, 1.5f, 0f
                                     };
             // Creating vertex buffer
             var stream = new DataStream(4 * vertexSize, true, true);
