@@ -16,7 +16,7 @@ namespace Ch0nkEngine
         public Effect effect;
         public InputLayout layout;
 
-        const int vertexSize = sizeof(float) * 5;
+        const int vertexSize = sizeof(float) * 3;
 
         public override void Render(GameTime time)
         {
@@ -29,7 +29,7 @@ namespace Ch0nkEngine
             // Render
             Master.I.device11.ImmediateContext.ClearRenderTargetView(Master.I.renderTargetView, new Color4(1.0f, 0, 0, 1.0f));
             effect.GetTechniqueByIndex(0).GetPassByIndex(0).Apply(Master.I.device11.ImmediateContext);
-            Master.I.device11.ImmediateContext.DrawIndexed(6, 0, 0);
+            Master.I.device11.ImmediateContext.Draw(4, 0);
             Master.I.swapChain.Present(0, PresentFlags.None);
             RenderComponents(time);
         }
@@ -93,10 +93,11 @@ namespace Ch0nkEngine
 
         void CreateGeometry()
         {
+            /*
             float[] vertices = new[]
                                     {
-                                        -1.0f, -1.0f, 0f, 0f, 1.0f,
-                                        1.0f, -1.0f, 0f, 1.0f, 1.0f,
+                                        -1.0f, -1.0f, 0f, 0f, 1.0f, 
+                                        1.0f, -1.0f, 0f, 1.0f, 1.0f, 
                                         1.0f, 1.0f, 0f, 1.0f, 0.0f,
                                         -1.0f, 1.0f, 0f, 0.0f, 0.0f,
 
@@ -107,7 +108,14 @@ namespace Ch0nkEngine
                                         (short)0, (short)1, (short)2,
                                         (short)0, (short)2, (short)3
                                 };
-
+            */
+            float[] vertices = new[]
+                                    {
+                                        -1.0f, -1.0f, 0f,
+                                        1.0f, -1.0f, 0f,
+                                        1.0f, 1.0f, 0f,
+                                        -1.0f, 1.0f, 0f
+                                    };
             // Creating vertex buffer
             var stream = new DataStream(4 * vertexSize, true, true);
             stream.WriteRange(vertices);
@@ -123,6 +131,7 @@ namespace Ch0nkEngine
             });
             stream.Dispose();
 
+            /*
             // Index buffer
             stream = new DataStream(6 * 2, true, true);
             stream.WriteRange(faces);
@@ -137,12 +146,13 @@ namespace Ch0nkEngine
                 Usage = ResourceUsage.Default
             });
             stream.Dispose();
+             */
 
             // Uploading to the device
             Master.I.device11.ImmediateContext.InputAssembler.InputLayout = layout;
-            Master.I.device11.ImmediateContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+            Master.I.device11.ImmediateContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.PointList;
             Master.I.device11.ImmediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, vertexSize, 0));
-            Master.I.device11.ImmediateContext.InputAssembler.SetIndexBuffer(indices, Format.R16_UInt, 0);
+            //Master.I.device11.ImmediateContext.InputAssembler.SetIndexBuffer(indices, Format.R16_UInt, 0);
         }
     }
 }
