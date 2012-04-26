@@ -28,7 +28,9 @@ namespace Ch0nkEngine
 
             // Render
             Master.I.device11.ImmediateContext.ClearRenderTargetView(Master.I.renderTargetView, new Color4(1.0f, 0, 0, 1.0f));
+            Master.I.device11.ImmediateContext.ClearDepthStencilView(Master.I.depthView, DepthStencilClearFlags.Depth, 1.0f, 0);
             effect.GetTechniqueByIndex(0).GetPassByIndex(0).Apply(Master.I.device11.ImmediateContext);
+            
             Master.I.device11.ImmediateContext.Draw(4, 0);
             Master.I.swapChain.Present(0, PresentFlags.None);
             RenderComponents(time);
