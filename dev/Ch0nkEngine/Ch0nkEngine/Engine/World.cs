@@ -45,6 +45,7 @@ namespace Ch0nkEngine
 
         public override void Update(GameTime time)
         {
+            
             if (z > 1)
                 z_increment = -0.01f;
             else if (z < -1)
@@ -53,7 +54,6 @@ namespace Ch0nkEngine
             data.Position.Z = z;
             Bl0ck[] dataArray = new []{data};
             box.Data.Position = 0;
-            //Where T is my vertex structure type 
             box.Data.WriteRange<Bl0ck>(dataArray);
              
             
@@ -62,6 +62,15 @@ namespace Ch0nkEngine
 
         public override void Render(GameTime time)
         {
+            var technique = effect.GetTechniqueByIndex(0);
+            var pass = technique.GetPassByIndex(0);
+            layout = new InputLayout(Master.I.device11, pass.Description.Signature, Bl0ck.inputElements);
+
+            // Uploading to the device
+            Master.I.device11.ImmediateContext.InputAssembler.InputLayout = layout;
+            Master.I.device11.ImmediateContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.PointList;
+            Master.I.device11.ImmediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, Bl0ck.SizeInBytes, 0));
+
             Matrix worldMatrix = Matrix.Identity;
             Matrix viewMatrix = Master.I.camera.ViewMatrix;
             Matrix projectionMatrix = Master.I.camera.ProjectionMatrix;
@@ -84,9 +93,6 @@ namespace Ch0nkEngine
                 effect = new Effect(Master.I.device11, byteCode);
             }
 
-            var technique = effect.GetTechniqueByIndex(0);
-            var pass = technique.GetPassByIndex(0);
-            layout = new InputLayout(Master.I.device11, pass.Description.Signature, Bl0ck.inputElements);
 
             // Creating geometry
             Bl0ck[] vertices = new[]
@@ -113,10 +119,6 @@ namespace Ch0nkEngine
             });
             stream.Dispose();
 
-            // Uploading to the device
-            Master.I.device11.ImmediateContext.InputAssembler.InputLayout = layout;
-            Master.I.device11.ImmediateContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.PointList;
-            Master.I.device11.ImmediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, Bl0ck.SizeInBytes, 0));
 
             box = Master.I.device11.ImmediateContext.MapSubresource(vertexBuffer, 0, MapMode.WriteNoOverwrite, SlimDX.Direct3D11.MapFlags.None);
             // Texture
