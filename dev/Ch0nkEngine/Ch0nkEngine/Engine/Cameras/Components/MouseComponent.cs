@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using SlimDX;
 using SlimDX.RawInput;
-using Ch0nkEngine.Engine.Composition;
+using Ch0nkEngine.Composition;
 
 
 namespace Ch0nkEngine.Cameras.Components

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Ch0nkEngine.Cameras;
-using Ch0nkEngine.Engine.Composition;
+using Ch0nkEngine.Composition;
 using Ch0nkEngine.Cameras.Components;
 using SlimDX.DXGI;
 using SlimDX.Direct3D11;
@@ -20,6 +20,7 @@ namespace Ch0nkEngine
         public MainForm form;
         public World world;
         public Camera camera;
+        public Stats stats;
 
         public Device device11;
         public SwapChain swapChain;
@@ -68,6 +69,15 @@ namespace Ch0nkEngine
             InitializeCamera();
             InitializeGraphics();
             InitializeWorld();
+            InitializeStats();
+        }
+
+        private void InitializeStats()
+        {
+
+            stats = new Stats();
+            stats.Load();
+            AddComponent(stats);
         }
 
         private void InitializeGraphics()
@@ -208,6 +218,9 @@ namespace Ch0nkEngine
             {
                 return;
             }
+
+            device11.ImmediateContext.ClearRenderTargetView(renderTargetView, new Color4(1.0f, 0, 0, 1.0f));
+            device11.ImmediateContext.ClearDepthStencilView(depthView, DepthStencilClearFlags.Depth, 1.0f, 0);
             RenderComponents(time);
         }
 

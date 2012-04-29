@@ -4,7 +4,7 @@ using Ch0nkEngine.Cameras.Components;
 using SlimDX;
 using SlimDX.Direct3D11;
 using System.Windows.Forms;
-using Ch0nkEngine.Engine.Composition;
+using Ch0nkEngine.Composition;
 
 namespace Ch0nkEngine.Cameras
 {

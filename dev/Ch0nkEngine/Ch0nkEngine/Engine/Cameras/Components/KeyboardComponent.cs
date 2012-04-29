@@ -3,13 +3,13 @@ using System.Windows.Forms;
 using SlimDX.RawInput;
 using System;
 using SlimDX;
-using Ch0nkEngine.Engine.Composition;
+using Ch0nkEngine.Composition;
 
 namespace Ch0nkEngine.Cameras.Components
 {
     public class KeyboardComponent : Component
     {
-        private float speed = 1; //units per second
+        private float speed = 4; //units per second
 
         private readonly Keys[] usedKeys = { Keys.W, Keys.S, Keys.A, Keys.D, Keys.Space, Keys.C };
         private Dictionary<Keys, KeyState> _keyStates = new Dictionary<Keys, KeyState>();

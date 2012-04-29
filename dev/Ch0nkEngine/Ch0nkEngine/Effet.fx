@@ -83,27 +83,27 @@ void GS( point GS_IN input[1], inout TriangleStream<PS_IN> OutputStream )
 	
 	
 	_input = input[0].pos;
-
+	
 	addFace(OutputStream, float3(_input.x - 1, _input.y - 1, _input.z - 1),
-					      float3(_input.x - 1, _input.y + 1, _input.z - 1),
+					      float3(_input.x + 1, _input.y - 1, _input.z - 1),
 					      float3(_input.x + 1, _input.y + 1, _input.z - 1),
-					      float3(_input.x + 1, _input.y - 1, _input.z - 1));
-
+					      float3(_input.x - 1, _input.y + 1, _input.z - 1));
+						  
 	addFace(OutputStream, float3(_input.x - 1, _input.y - 1, _input.z + 1),
 					      float3(_input.x - 1, _input.y + 1, _input.z + 1),
 					      float3(_input.x + 1, _input.y + 1, _input.z + 1),
 					      float3(_input.x + 1, _input.y - 1, _input.z + 1));
-
+						  
 	addFace(OutputStream, float3(_input.x + 1, _input.y - 1, _input.z - 1),
-					      float3(_input.x + 1, _input.y + 1, _input.z - 1),
+					      float3(_input.x + 1, _input.y - 1, _input.z + 1),
 					      float3(_input.x + 1, _input.y + 1, _input.z + 1),
-					      float3(_input.x + 1, _input.y - 1, _input.z + 1));
+					      float3(_input.x + 1, _input.y + 1, _input.z - 1));
 
 						  
 	addFace(OutputStream, float3(_input.x - 1, _input.y - 1, _input.z - 1),
-					      float3(_input.x - 1, _input.y - 1, _input.z + 1),
+					      float3(_input.x - 1, _input.y + 1, _input.z - 1),
 					      float3(_input.x - 1, _input.y + 1, _input.z + 1),
-					      float3(_input.x - 1, _input.y + 1, _input.z - 1));
+					      float3(_input.x - 1, _input.y - 1, _input.z + 1));
 
 	addFace(OutputStream, float3(_input.x - 1, _input.y + 1, _input.z - 1),
 					      float3(_input.x + 1, _input.y + 1, _input.z - 1),
@@ -114,7 +114,7 @@ void GS( point GS_IN input[1], inout TriangleStream<PS_IN> OutputStream )
 					      float3(_input.x - 1, _input.y - 1, _input.z + 1),
 					      float3(_input.x + 1, _input.y - 1, _input.z + 1),
 					      float3(_input.x + 1, _input.y - 1, _input.z - 1));
-
+						  
 }
 
 // Technique

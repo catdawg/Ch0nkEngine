@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Ch0nkEngine.Engine.Composition
+namespace Ch0nkEngine.Composition
 {
     public abstract class Container : Component
     {

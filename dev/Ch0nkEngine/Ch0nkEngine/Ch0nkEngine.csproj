@@ -45,6 +45,7 @@
     <Compile Include="Engine\Cameras\TargetCamera.cs" />
     <Compile Include="Engine\Composition\Container.cs" />
     <Compile Include="Engine\Master.cs" />
+    <Compile Include="Engine\Stats.cs" />
     <Compile Include="Engine\World.cs" />
     <Compile Include="Window.cs">
       <SubType>Form</SubType>
