@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ch0nkEngine.Data;
+using Ch0nkEngine.Data.Data;
+using Ch0nkEngine.Data.Materials;
 using Microsoft.Xna.Framework;
 
 namespace Ch0nkEngine.XNAViewer.Drawing

@@ -40,17 +40,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Block.cs" />
-    <Compile Include="Ch0nk.cs" />
-    <Compile Include="Ch0nkBlock.cs" />
-    <Compile Include="EightFoldTree.cs" />
-    <Compile Include="MaterialTranslator.cs" />
-    <Compile Include="MaterialType.cs" />
+    <Compile Include="Basic\Vector3b.cs" />
+    <Compile Include="Data\Block.cs" />
+    <Compile Include="Data\Ch0nk.cs" />
+    <Compile Include="Data\Ch0nkBlock.cs" />
+    <Compile Include="Data\Dimension.cs" />
+    <Compile Include="Data\EightFoldTree.cs" />
+    <Compile Include="Materials\MaterialTranslator.cs" />
+    <Compile Include="Materials\MaterialType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sector.cs" />
-    <Compile Include="Serialization.cs" />
-    <Compile Include="Vector3i.cs" />
-    <Compile Include="Vector4i.cs" />
+    <Compile Include="Data\Sector.cs" />
+    <Compile Include="Utils\Serialization.cs" />
+    <Compile Include="Basic\Vector3i.cs" />
+    <Compile Include="Basic\Vector4i.cs" />
+    <Compile Include="Realm.cs" />
+    <Compile Include="Dimensions\EarthDimension.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ch0nkEngine.Data
+namespace Ch0nkEngine.Data.Materials
 {
     public class MaterialTranslator
     {

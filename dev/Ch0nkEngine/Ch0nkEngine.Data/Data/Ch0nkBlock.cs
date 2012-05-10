@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Ch0nkEngine.Data.Basic;
 
-namespace Ch0nkEngine.Data
+namespace Ch0nkEngine.Data.Data
 {
     [Serializable()]
     public class Ch0nkBlock

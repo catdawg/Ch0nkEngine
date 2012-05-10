@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace Ch0nkEngine.Data
+namespace Ch0nkEngine.Data.Basic
 {
     [Serializable]
     public struct Vector4i

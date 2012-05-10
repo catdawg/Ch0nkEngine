@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Ch0nkEngine.Data.Basic;
+using Ch0nkEngine.Data.Materials;
 
-namespace Ch0nkEngine.Data
+namespace Ch0nkEngine.Data.Data
 {
     [Serializable]
     public class Ch0nk
@@ -11,7 +13,7 @@ namespace Ch0nkEngine.Data
         //this could be changed by the user
         public const int Size = 512;
         public const int BlockGroupSize = 32;
-        public static String Ch0nksFolder = @"Ch0nks\"; 
+        public static String Ch0nksFolder = @"Ch0nks\";
 
         private Vector3i _location;
         private EightFoldTree _eightFoldTree;

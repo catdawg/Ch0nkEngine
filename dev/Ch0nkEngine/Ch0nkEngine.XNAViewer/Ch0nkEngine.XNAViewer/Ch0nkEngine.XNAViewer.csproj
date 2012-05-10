@@ -127,7 +127,6 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
-    <Content Include="lzo.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Ch0nkEngine.Data\Ch0nkEngine.Data.csproj">

@@ -1,7 +1,10 @@
-﻿namespace Ch0nkEngine.Data
+﻿using Ch0nkEngine.Data.Basic;
+
+namespace Ch0nkEngine.Data.Data
 {
     public struct Block
     {
+        public Ch0nk Ch0nk;
         public Vector3i Location;
         public short MaterialType;
         public short Size;
@@ -12,5 +15,7 @@
             MaterialType = materialType;
             Size = size;
         }
+
+        public Vector4i
     }
 }

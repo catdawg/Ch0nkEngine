@@ -1,4 +1,5 @@
 ﻿using Ch0nkEngine.Data;
+using Ch0nkEngine.Data.Basic;
 using Microsoft.Xna.Framework;
 
 namespace Ch0nkEngine.XNAViewer.Drawing

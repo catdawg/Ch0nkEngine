@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Ch0nkEngine.Data;
+using Ch0nkEngine.Data.Basic;
+using Ch0nkEngine.Data.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

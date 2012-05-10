@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
-namespace Ch0nkEngine.Data
+namespace Ch0nkEngine.Data.Utils
 {
     public class Serialization
     {

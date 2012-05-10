@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using Ch0nkEngine.Data.Basic;
+using Ch0nkEngine.Data.Materials;
 
-namespace Ch0nkEngine.Data
+namespace Ch0nkEngine.Data.Data
 {
     public class LocalizedEightFoldTree
     {
