@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Ch0nkEngine.Data.Basic;
-using Ch0nkEngine.Data.Materials;
+using Ch0nkEngine.Data.Data.BoundingShapes;
+using Ch0nkEngine.Data.Data.Materials;
+using Ch0nkEngine.Data.Data.Materials.Types;
 
 namespace Ch0nkEngine.Data.Data
 {
@@ -27,15 +29,24 @@ namespace Ch0nkEngine.Data.Data
     [Serializable]
     public class EightFoldTree
     {
-        private MaterialType _materialType;
-        public EightFoldTree[,,] _children;
-        public short _middle = 256;  //min é 0
+        private IMaterial _material;
+        //private MaterialType _materialType;
+        private EightFoldTree[,,] _children;
+        private byte _middle;  //min é 0
 
-        public EightFoldTree(short size, MaterialType materialType)
+        /*public EightFoldTree(byte size, MaterialType materialType)
         {
-            _middle = (short)(size / 2);
+            _middle = (byte)(size / 2);
             _materialType = materialType;
+        }*/
+
+        public EightFoldTree(byte size, IMaterial material)
+        {
+            _middle = (byte)(size / 2);
+            _material = material;
         }
+
+        #region Old, deprecated functions
 
         /*
         public EightFoldTree(short size, String materialType)
@@ -88,17 +99,18 @@ namespace Ch0nkEngine.Data.Data
 
             return new[] { vectorIndices, vectorDeeperLocation };
         }*/
+        #endregion
 
-        public MaterialType this[Vector3i vectorLocation]
+        public IMaterial this[Vector3i vectorLocation]
         {
             get
             {
                 if (_children == null || _middle == 0)
-                    return _materialType;
+                    return _material;
 
                 EightFoldTree childTree = _children[vectorLocation.X / _middle, vectorLocation.Y / _middle, vectorLocation.Z / _middle];
                 if (childTree == null)
-                    return _materialType;
+                    return _material;
 
                 return childTree[vectorLocation.X % _middle, vectorLocation.Y % _middle, vectorLocation.Z % _middle];
 
@@ -108,8 +120,8 @@ namespace Ch0nkEngine.Data.Data
             }
             set
             {
-                if (_middle == 0)
-                    _materialType = value;
+                if (Size == 1)
+                    _material = value;
                 else
                 {
                     //if there are no children, expand now
@@ -122,7 +134,7 @@ namespace Ch0nkEngine.Data.Data
 
                     //if that index has not yet been allocated, do it now
                     if (_children[location.X, location.Y, location.Z] == null)
-                        _children[location.X, location.Y, location.Z] = new EightFoldTree(_middle, _materialType);
+                        _children[location.X, location.Y, location.Z] = new EightFoldTree(_middle, _material);
 
                     _children[location.X, location.Y, location.Z][vectorLocation.X % _middle, vectorLocation.Y % _middle, vectorLocation.Z % _middle] = value;
 
@@ -132,7 +144,7 @@ namespace Ch0nkEngine.Data.Data
             }
         }
 
-        public MaterialType this[int x, int y, int z]
+        public IMaterial this[int x, int y, int z]
         {
             get { return this[new Vector3i(x, y, z)]; }
             set { this[new Vector3i(x, y, z)] = value; }
@@ -162,16 +174,87 @@ namespace Ch0nkEngine.Data.Data
             return eightFoldTrees;
         }
 
+
+        /// <summary>
+        /// Gets all the blocks contained in this tree and the subtrees
+        /// </summary>
+        /// <param name="ch0Nk"></param>
+        /// <param name="startLocation"></param>
+        /// <returns></returns>
+        public List<Block> GetAllBlocks(Ch0nk ch0Nk, Vector3b startLocation)
+        {
+                //if there are no children, this block is returned
+            if (_children == null)
+                //if (_material is AirMaterial)
+                //    return new List<Block>(1);
+                //else
+                    return new List<Block>(new[] { new Block(ch0Nk, startLocation, _material, Size) });
+
+            //otherwise, iterate over all the children
+            List<Block> blocks = new List<Block>();
+            for (int i = 0; i < 2; i++)
+                for (int j = 0; j < 2; j++)
+                    for (int k = 0; k < 2; k++)
+                    {
+                        if (_children[i, j, k] == null)
+                            blocks.Add(new Block(ch0Nk, startLocation + new Vector3b(i * _middle, j * _middle, k * _middle), _material, _middle));
+                        else
+                            blocks.AddRange(_children[i, j, k].GetAllBlocks(ch0Nk, startLocation + new Vector3b(i * _middle, j * _middle, k * _middle)));
+                        //else if (!(_material is AirMaterial))
+                            
+                    }
+                        
+                        
+
+            return blocks;
+        }
+
+        public void ChangeMaterial(BoundingShape boundingShape, IMaterial material, Ch0nk ch0Nk, Vector3b startLocation)
+        {
+            Vector3i treeAbsolutePosition = ch0Nk.Position + startLocation;
+            BoundingBox treeBoundingBox = new BoundingBox(treeAbsolutePosition, Size);
+
+            if (_children == null && boundingShape.Encloses(treeBoundingBox) && Size > 1)
+                Console.WriteLine("GOT IT");
+
+            if ((Size == 1) || (_children == null && boundingShape.Encloses(treeBoundingBox)))
+            {
+                _material = material;
+            }
+            else
+            {
+                for (int i = 0; i < 2; i++)
+                    for (int j = 0; j < 2; j++)
+                        for (int k = 0; k < 2; k++)
+                        {
+                            Vector3i childAbsolutePosition = ch0Nk.Position + startLocation + new Vector3b(i * _middle, j * _middle, k * _middle);
+                            BoundingBox childBoundingBox = new BoundingBox(childAbsolutePosition, _middle);
+                            if (childBoundingBox.Intersects(boundingShape))
+                            {
+                                if (_children == null)
+                                    _children = new EightFoldTree[2, 2, 2];
+
+                                if (_children[i, j, k] == null)
+                                    _children[i, j, k] = new EightFoldTree(_middle, material);
+                                _children[i, j, k].ChangeMaterial(boundingShape, material, ch0Nk, startLocation + new Vector3b(i * _middle, j * _middle, k * _middle));
+                            }
+                        }
+            }
+        }
+
         /// <summary>
         /// Gets all the blocks contained in this tree and the subtrees
         /// </summary>
         /// <param name="startLocation"></param>
         /// <returns></returns>
-        public List<Block> GetAllBlocks(Vector3i startLocation)
+        /*public List<Block> GetAllBlocks(Vector3i startLocation)
         {
             //if there are no children, this block is returned
             if (_children == null)
-                return new List<Block>(new[] { new Block(startLocation, MaterialTranslator.GetMaterialShortCode(_materialType), Size) });
+                return new List<Block>(new[] { MaterialFactory.CreateBlock(startLocation,) });
+            var asr = new DirtBlock(new Vector3i()) { Size = 2 };
+            
+
 
             //otherwise, iterate over all the children
             List<Block> blocks = new List<Block>();
@@ -181,15 +264,22 @@ namespace Ch0nkEngine.Data.Data
                         blocks.AddRange(_children[i, j, k].GetAllBlocks(startLocation + new Vector3i(i * _middle, j * _middle, k * _middle)));
 
             return blocks;
-        }
+        }*/
 
         /// <summary>
         /// The cube dimensions of the tree.
         /// 1 is the smallest dimension possible.
         /// </summary>
-        public short Size
+        public byte Size
         {
-            get { return (short)(_middle > 0 ? (_middle * 2) : 1); }
+            get { return (byte)(_middle > 0 ? (_middle * 2) : 1); }
         }
+
+        public BoundingBox GetBoundingCube(Ch0nk ch0Nk, Vector3b startLocation)
+        {
+            return new BoundingBox(ch0Nk.Position + new Vector3i(startLocation.X, startLocation.Y, startLocation.Z), Size);
+        }
+
+        
     }
 }

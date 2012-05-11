@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Ch0nkEngine.Data.Basic;
-using Ch0nkEngine.Data.Materials;
+using Ch0nkEngine.Data.Data.BoundingShapes;
+using Ch0nkEngine.Data.Data.Materials;
+using Ch0nkEngine.Data.Data.Materials.Types;
 
 namespace Ch0nkEngine.Data.Data
 {
@@ -11,23 +13,25 @@ namespace Ch0nkEngine.Data.Data
     public class Ch0nk
     {
         //this could be changed by the user
-        public const int Size = 512;
-        public const int BlockGroupSize = 32;
+        public const byte Size = 64;
         public static String Ch0nksFolder = @"Ch0nks\";
 
-        private Vector3i _location;
+        private Vector3i _position;
         private EightFoldTree _eightFoldTree;
-
-        public Ch0nk()
+        private Dimension _dimension;
+        
+        public Ch0nk(Dimension dimension, Vector3i position, IMaterial material)
         {
-            _location = new Vector3i(0,0,0);
-            _eightFoldTree = new EightFoldTree(Size, MaterialType.Dirt);
+            _dimension = dimension;
+            _position = position;
+            _eightFoldTree = new EightFoldTree(Size, material);
+            _eightFoldTree[0, 0, 0] = new SandMaterial();
         }
 
-        public Vector3i Location
+        public Vector3i Position
         {
-            get { return _location; }
-            set { _location = value; }
+            get { return _position; }
+            set { _position = value; }
         }
 
         public EightFoldTree EightFoldTree
@@ -38,7 +42,7 @@ namespace Ch0nkEngine.Data.Data
 
         public List<Block> GetAllBlocks()
         {
-            return null;//return EightFoldTree.GetAllBlocks(_location);
+            return EightFoldTree.GetAllBlocks(this,new Vector3b());
         }
 
         public List<LocalizedEightFoldTree> GetBlockGroups()
@@ -55,7 +59,7 @@ namespace Ch0nkEngine.Data.Data
             BinaryFormatter bf = new BinaryFormatter();
             MemoryStream ms = new MemoryStream();
             bf.Serialize(ms, this);
-            File.WriteAllBytes(GetFileName(_location), ms.ToArray());
+            File.WriteAllBytes(GetFileName(_position), ms.ToArray());
             return ;
         }
 
@@ -80,6 +84,16 @@ namespace Ch0nkEngine.Data.Data
         private static String GetFileName(Vector3i location)
         {
             return Ch0nksFolder + "Ch0nk(" + location.X + "," + location.Y + "," + location.Z + ").ch0nk";
+        }
+
+        public BoundingBox BoundingBox
+        {
+            get{return new BoundingBox(_position,Size);}
+        }
+
+        public void ChangeMaterial(BoundingShape boundingShape, IMaterial material)
+        {
+            _eightFoldTree.ChangeMaterial(boundingShape, material,this,new Vector3b());
         }
     }
 }

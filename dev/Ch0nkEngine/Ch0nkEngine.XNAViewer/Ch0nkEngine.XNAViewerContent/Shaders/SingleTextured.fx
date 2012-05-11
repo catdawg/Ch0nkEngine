@@ -113,7 +113,7 @@ VertexShaderOutput InstancingVS(VertexShaderInput input, float4 instanceData : T
  
 float4 InstancingPS(VertexShaderOutput input) : COLOR0
 {
-    return saturate(input.Color + tex2D(Texture0Sampler, input.TextureCoordinate));
+    return saturate(input.Color + tex2D(Texture0Sampler, input.TextureCoordinate)*0.8);
 }
 
 technique SingleTexturedInstancing

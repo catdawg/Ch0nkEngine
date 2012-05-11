@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ch0nkEngine.Data;
 using Ch0nkEngine.Data.Data;
-using Ch0nkEngine.Data.Materials;
+using Ch0nkEngine.Data.Data.Materials.Types;
 using Microsoft.Xna.Framework;
 
 namespace Ch0nkEngine.XNAViewer.Drawing
@@ -22,10 +22,13 @@ namespace Ch0nkEngine.XNAViewer.Drawing
             Dictionary<String, List<Block>> materialGroups = new Dictionary<string, List<Block>>();
             foreach (var block in blocks)
             {
-                String materialName = MaterialTranslator.GetMaterialName(block.MaterialType);
-                if(!materialGroups.ContainsKey(materialName))
-                    materialGroups.Add(materialName, new List<Block>());
-                materialGroups[materialName].Add(block);
+                //String materialName = MaterialTranslator.GetMaterialName(block.MaterialType);
+                if (block.Material is AirMaterial)
+                    continue;
+
+                if (!materialGroups.ContainsKey(block.Material.MaterialName))
+                    materialGroups.Add(block.Material.MaterialName, new List<Block>());
+                materialGroups[block.Material.MaterialName].Add(block);
             }
 
             List<DrawableCubeCollection> cubeCollections = new List<DrawableCubeCollection>();

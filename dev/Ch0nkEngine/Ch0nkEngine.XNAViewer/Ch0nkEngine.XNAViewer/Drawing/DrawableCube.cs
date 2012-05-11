@@ -88,7 +88,8 @@ namespace Ch0nkEngine.XNAViewer.Drawing
             List<int> indicesList = new List<int>();
             int indexerValue = 0;
 
-            CreateCube(new Block(new Vector3i(0,0,0),0,1), ref customVertexList, ref indicesList, ref indexerValue);
+            //new Block(new Vector3i(0,0,0),1), 
+            CreateCube(ref customVertexList, ref indicesList, ref indexerValue);
 
             foreach (Block block in blocks)
             {
@@ -115,14 +116,14 @@ namespace Ch0nkEngine.XNAViewer.Drawing
             _bindings[0] = new VertexBufferBinding(MyVertexBuffer, 0);
             _bindings[1] = new VertexBufferBinding(_instanceBuffer, 0, 1);
         }
-
+        
         private void InitializeInstances(List<Block> blocks)
         {
             List<CubeInstanceInfo> instanceInfos = new List<CubeInstanceInfo>();
 
             foreach (Block block in blocks)
             {
-                instanceInfos.Add(new CubeInstanceInfo(block.Location.ToVector3(), block.Size));
+                instanceInfos.Add(new CubeInstanceInfo(block.AbsolutePosition.ToVector3(), block.Size));
             }
 
             _instanceBuffer = new VertexBuffer(Device, CubeInstanceInfo.VertexDeclaration, blocks.Count, BufferUsage.WriteOnly);
@@ -130,50 +131,52 @@ namespace Ch0nkEngine.XNAViewer.Drawing
             _instanceCount = blocks.Count;
         }
 
-        private void CreateCube(Block block, ref List<VertexNormalTexture> customVertexList, ref List<int> indicesList, ref int indexerValue)
+        private void CreateCube(ref List<VertexNormalTexture> customVertexList, ref List<int> indicesList, ref int indexerValue)
         {
-            Vector3 location = block.Location.ToVector3();
-            float size = block.Size;
+            Vector3 location = Vector3.Zero;
+            float size = 1;
+
+            //Attention! Texture coordinates are different from OpenGL: http://msdn.microsoft.com/en-us/library/windows/desktop/bb206245(v=vs.85).aspx
             //top face
-            customVertexList.Add(new VertexNormalTexture(location, Vector3.UnitZ,new Vector2(0,-1)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size,0,0), Vector3.UnitZ,new Vector2(1,-1)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size,-size,0), Vector3.UnitZ,new Vector2(1,0)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0,-size,0), Vector3.UnitZ,new Vector2(0,0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, 0, size), Vector3.UnitZ, new Vector2(0, 1)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, size, size), Vector3.UnitZ, new Vector2(0, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, size, size), Vector3.UnitZ, new Vector2(1, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, size), Vector3.UnitZ, new Vector2(1, 1)));
             AddIndices(ref indicesList, ref indexerValue);
 
             //bottom face
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, 0, -size), -Vector3.UnitZ, new Vector2(0, -1)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, -size, -size), -Vector3.UnitZ, new Vector2(0, 0)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, -size, -size), -Vector3.UnitZ, new Vector2(1, 0)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, -size), -Vector3.UnitZ, new Vector2(1, -1)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, 0, 0), -Vector3.UnitZ, new Vector2(0, 1)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, 0), -Vector3.UnitZ, new Vector2(1, 1)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, size, 0), -Vector3.UnitZ, new Vector2(1, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, size, 0), -Vector3.UnitZ, new Vector2(0, 0)));
             AddIndices(ref indicesList, ref indexerValue);
 
             //back face
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, -size, 0), -Vector3.UnitY, new Vector2(0, -1)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, -size, 0), -Vector3.UnitY, new Vector2(1, -1)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, -size, -size), -Vector3.UnitY, new Vector2(1, 0)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, -size, -size), -Vector3.UnitY, new Vector2(0, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, 0, 0), -Vector3.UnitY, new Vector2(0, 1)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, 0, size), -Vector3.UnitY, new Vector2(0, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, size), -Vector3.UnitY, new Vector2(1, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, 0), -Vector3.UnitY, new Vector2(1, 1)));
             AddIndices(ref indicesList, ref indexerValue);
 
             //front face
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, 0), Vector3.UnitY, new Vector2(0, -1)));
-            customVertexList.Add(new VertexNormalTexture(location, Vector3.UnitY, new Vector2(1, -1))); 
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, 0, -size), Vector3.UnitY, new Vector2(1, 0)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, -size), Vector3.UnitY, new Vector2(0, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, size, 0), Vector3.UnitY, new Vector2(0, 1)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, size, 0), Vector3.UnitY, new Vector2(1, 1)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, size, size), Vector3.UnitY, new Vector2(1, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, size, size), Vector3.UnitY, new Vector2(0, 0)));
             AddIndices(ref indicesList, ref indexerValue);
 
             //right face
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, -size, 0), Vector3.UnitX, new Vector2(0, -1)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, 0), Vector3.UnitX, new Vector2(1, -1)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, -size), Vector3.UnitX, new Vector2(1, 0)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, -size, -size), Vector3.UnitX, new Vector2(0, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, 0), Vector3.UnitX, new Vector2(0, 1)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, 0, size), Vector3.UnitX, new Vector2(0, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, size, size), Vector3.UnitX, new Vector2(1, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(size, size, 0), Vector3.UnitX, new Vector2(1, 1)));
             AddIndices(ref indicesList, ref indexerValue);
 
             //left face
-            customVertexList.Add(new VertexNormalTexture(location, -Vector3.UnitX, new Vector2(1, -1)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, -size, 0), -Vector3.UnitX, new Vector2(0, -1)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, -size, -size), -Vector3.UnitX, new Vector2(0, 0)));
-            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, 0, -size), -Vector3.UnitX, new Vector2(1, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, 0, 0), -Vector3.UnitX, new Vector2(0, 1)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, size, 0), -Vector3.UnitX, new Vector2(1, 1)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, size, size), -Vector3.UnitX, new Vector2(1, 0)));
+            customVertexList.Add(new VertexNormalTexture(location + new Vector3(0, 0, size), -Vector3.UnitX, new Vector2(0, 0)));
             AddIndices(ref indicesList, ref indexerValue);
         }
 

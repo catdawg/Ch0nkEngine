@@ -42,19 +42,23 @@
   <ItemGroup>
     <Compile Include="Basic\Vector3b.cs" />
     <Compile Include="Data\Block.cs" />
+    <Compile Include="Data\BoundingShapes\BoundingBox.cs" />
+    <Compile Include="Data\BoundingShapes\BoundingSphere.cs" />
     <Compile Include="Data\Ch0nk.cs" />
-    <Compile Include="Data\Ch0nkBlock.cs" />
     <Compile Include="Data\Dimension.cs" />
     <Compile Include="Data\EightFoldTree.cs" />
-    <Compile Include="Materials\MaterialTranslator.cs" />
-    <Compile Include="Materials\MaterialType.cs" />
+    <Compile Include="Data\Materials\Types\AirMaterial.cs" />
+    <Compile Include="Data\Materials\Types\GrassMaterial.cs" />
+    <Compile Include="Data\Materials\IMaterial.cs" />
+    <Compile Include="Data\Materials\MaterialFactory.cs" />
+    <Compile Include="Data\BoundingShapes\BoundingShape.cs" />
+    <Compile Include="Data\Materials\Types\SandMaterial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\Sector.cs" />
     <Compile Include="Utils\Serialization.cs" />
     <Compile Include="Basic\Vector3i.cs" />
     <Compile Include="Basic\Vector4i.cs" />
     <Compile Include="Realm.cs" />
-    <Compile Include="Dimensions\EarthDimension.cs" />
+    <Compile Include="Data\Dimensions\EarthDimension.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

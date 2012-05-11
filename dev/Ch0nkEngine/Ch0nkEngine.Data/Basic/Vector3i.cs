@@ -97,9 +97,37 @@ namespace Ch0nkEngine.Data.Basic
             return new Vector3i(a._x % b._x, a._y % b._y, a._z % b._z);
         }
 
+        public static Vector3i operator +(Vector3i a, Vector3b b)
+        {
+            return new Vector3i(a._x + b.X, a._y + b.Y, a._z + b.Z);
+        }
+
         public override string ToString()
         {
             return X + "," + Y + "," + Z;
+        }
+
+        public float Length
+        {
+            get { return (float)Math.Sqrt(_x * _x + _y * _y + _z * _z); }
+        }
+
+        public float DistanceTo(Vector3i b)
+        {
+            float dx = _x - b._x;
+            float dy = _y - b._y;
+            float dz = _z - b._z;
+
+            return (float)Math.Sqrt(dx * dx + dy * dy + dz * dz);
+        }
+
+        public static float Distance(Vector3i a, Vector3i b)
+        {
+            float dx = a._x - b._x;
+            float dy = a._y - b._y;
+            float dz = a._z - b._z;
+
+            return (float)Math.Sqrt(dx * dx + dy * dy + dz * dz);
         }
     }
 }
