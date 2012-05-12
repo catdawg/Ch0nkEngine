@@ -11,6 +11,8 @@ using SlimDX.DXGI;
 using SlimDX.D3DCompiler;
 using Buffer = SlimDX.Direct3D11.Buffer;
 using System.Runtime.InteropServices;
+using Ch0nkEngine.Data.Basic;
+using Ch0nkEngine.Data.Data.Materials.Types;
 
 namespace Ch0nkEngine
 {
@@ -92,9 +94,12 @@ namespace Ch0nkEngine
             Realm realm = new Realm();
             var dimension = realm.Dimensions[0];
             {
+                dimension.ChangeMaterial(new Ch0nkEngine.Data.Data.BoundingShapes.BoundingSphere(new Vector3i(32, 32, 64), 20), new AirMaterial());
                 var blocks = dimension.GetAllBlocks();
                 foreach(var block in blocks)
                 {
+                    if (block.Material.MaterialCode == 0)
+                        continue;
                     verticesList.Add(new Bl0ck(new Vector3(block.AbsolutePosition.X, block.AbsolutePosition.Y, block.AbsolutePosition.Z),
                         block.Size));
                 }

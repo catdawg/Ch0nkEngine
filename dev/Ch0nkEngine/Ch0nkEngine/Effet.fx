@@ -48,6 +48,7 @@ float4 PS( PS_IN input ) : SV_Target
 
 void addFace(inout TriangleStream<PS_IN> OutputStream, float size, float3 left_bottom, float3 right_bottom, float3 right_top, float3 left_top)
 {
+	size = 1;
     PS_IN output;
 	output.pos = mul(float4(left_bottom, 1), finalMatrix);
 	output.uv = float2(0, size);
