@@ -170,7 +170,7 @@ namespace Ch0nkEngine
             // Setup the raster description which will determine how and what polygons will be drawn.
             RasterizerStateDescription rasterDesc = new RasterizerStateDescription(){
                 IsAntialiasedLineEnabled = false,
-                CullMode = CullMode.Back,
+                CullMode = CullMode.None,
                 DepthBias = 0,
                 DepthBiasClamp = 0.0f,
                 IsDepthClipEnabled = true,

@@ -12,7 +12,7 @@ namespace Ch0nkEngine.Cameras.Components
 {
     public class MouseComponent : Component
     {
-        private float mouseSensivity = 1f;
+        private float mouseSensivity = 10f;
 
         private float mouseYInverted = 1; // mouse YAxis movement is inverted if -1
 

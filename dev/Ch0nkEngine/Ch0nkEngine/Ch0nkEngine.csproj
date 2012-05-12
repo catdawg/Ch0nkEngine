@@ -82,6 +82,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ch0nkEngine.Data\Ch0nkEngine.Data.csproj">
+      <Project>{8E3C44B0-DECF-426D-AACB-C4C0A15759BE}</Project>
+      <Name>Ch0nkEngine.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

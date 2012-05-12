@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Ch0nkEngine.Composition;
+using Ch0nkEngine.Data;
+using Ch0nkEngine.Data.Data;
 using SlimDX;
 using SlimDX.Direct3D11;
 using SlimDX.DXGI;
@@ -19,68 +21,60 @@ namespace Ch0nkEngine
     struct Bl0ck
     {
         public Vector3 Position;
+        public byte Size;
+        public byte Attr1;
         public static readonly InputElement[] inputElements = new[] {
                 new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
+                new InputElement("ATTRIBUTES", 0, Format.R8G8_UInt, InputElement.AppendAligned, 0),
             };
         public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Bl0ck));
-        public Bl0ck(Vector3 position)
+        public Bl0ck(Vector3 position, byte size)
         {
+            Size = 0;
+            Attr1 = size;
             Position = position;
         }
     }
     
     class World : Container
     {
-        public Effect effect;
-        public InputLayout layout;
+        private Effect _effect;
+        private InputLayout _layout;
 
-        public Buffer vertexBuffer;
-        DataBox box;
-        public int vertexBufferSize; 
+        private Buffer _vertexBuffer;
+        private DataBox _box;
+        private int _vertexBufferSize;
+        private int _numOfVertices;
         
-        private Bl0ck data = new Bl0ck(new Vector3(1.5f, -1.5f, 0f));
-        private float z = 0f;
-        private float z_increment = 0.01f;
 
 
         public override void Update(GameTime time)
         {
-            
-            if (z > 1)
-                z_increment = -0.01f;
-            else if (z < -1)
-                z_increment = 0.01f;
-            z += z_increment;
-            data.Position.Z = z;
-            Bl0ck[] dataArray = new []{data};
-            box.Data.Position = 0;
-            box.Data.WriteRange<Bl0ck>(dataArray);
-             
             
             UpdateComponents(time);
         }
 
         public override void Render(GameTime time)
         {
-            var technique = effect.GetTechniqueByIndex(0);
+            var technique = _effect.GetTechniqueByIndex(0);
             var pass = technique.GetPassByIndex(0);
-            layout = new InputLayout(Master.I.device11, pass.Description.Signature, Bl0ck.inputElements);
+            _layout = new InputLayout(Master.I.device11, pass.Description.Signature, Bl0ck.inputElements);
 
             // Uploading to the device
-            Master.I.device11.ImmediateContext.InputAssembler.InputLayout = layout;
+            Master.I.device11.ImmediateContext.InputAssembler.InputLayout = _layout;
             Master.I.device11.ImmediateContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.PointList;
-            Master.I.device11.ImmediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, Bl0ck.SizeInBytes, 0));
+            Master.I.device11.ImmediateContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Bl0ck.SizeInBytes, 0));
 
             Matrix worldMatrix = Matrix.Identity;
             Matrix viewMatrix = Master.I.camera.ViewMatrix;
             Matrix projectionMatrix = Master.I.camera.ProjectionMatrix;
 
-            effect.GetVariableByName("finalMatrix").AsMatrix().SetMatrix(worldMatrix * viewMatrix * projectionMatrix);
+            _effect.GetVariableByName("finalMatrix").AsMatrix().SetMatrix(worldMatrix * viewMatrix * projectionMatrix);
 
             // Render
-            effect.GetTechniqueByIndex(0).GetPassByIndex(0).Apply(Master.I.device11.ImmediateContext);
-            
-            Master.I.device11.ImmediateContext.Draw(4, 0);
+            _effect.GetTechniqueByIndex(0).GetPassByIndex(0).Apply(Master.I.device11.ImmediateContext);
+
+            Master.I.device11.ImmediateContext.Draw(_numOfVertices, 0);
             Master.I.swapChain.Present(0, PresentFlags.None);
             RenderComponents(time);
         }
@@ -90,26 +84,30 @@ namespace Ch0nkEngine
             // Preparing shaders
             using (ShaderBytecode byteCode = ShaderBytecode.CompileFromFile("Effet.fx", "bidon", "fx_5_0", ShaderFlags.OptimizationLevel3, EffectFlags.None))
             {
-                effect = new Effect(Master.I.device11, byteCode);
+                _effect = new Effect(Master.I.device11, byteCode);
             }
 
-
             // Creating geometry
-            Bl0ck[] vertices = new[]
-                                    {
-                                        new Bl0ck(new Vector3(1.5f, -1.5f, 0f)),
-                                        new Bl0ck(new Vector3(1.5f, 1.5f, 0f)),
-                                        new Bl0ck(new Vector3(-1.5f, 1.5f, 0f)),
-                                        new Bl0ck(new Vector3(-1.5f, -1.5f, 0f)),
-                                    };
-
-            vertexBufferSize = 4 * Bl0ck.SizeInBytes;
+            List<Bl0ck> verticesList = new List<Bl0ck>();
+            Realm realm = new Realm();
+            var dimension = realm.Dimensions[0];
+            {
+                var blocks = dimension.GetAllBlocks();
+                foreach(var block in blocks)
+                {
+                    verticesList.Add(new Bl0ck(new Vector3(block.AbsolutePosition.X, block.AbsolutePosition.Y, block.AbsolutePosition.Z),
+                        block.Size));
+                }
+            }
+            
+            _numOfVertices = verticesList.Count;
+            _vertexBufferSize = verticesList.Count * Bl0ck.SizeInBytes;
             // Creating vertex buffer
-            var stream = new DataStream(vertexBufferSize, true, true);
-            stream.WriteRange(vertices);
+            var stream = new DataStream(_vertexBufferSize, true, true);
+            stream.WriteRange(verticesList.ToArray());
             stream.Position = 0;
 
-            vertexBuffer = new Buffer(Master.I.device11, stream, new BufferDescription
+            _vertexBuffer = new Buffer(Master.I.device11, stream, new BufferDescription
             {
                 BindFlags = BindFlags.VertexBuffer,
                 CpuAccessFlags = CpuAccessFlags.Write,
@@ -120,20 +118,20 @@ namespace Ch0nkEngine
             stream.Dispose();
 
 
-            box = Master.I.device11.ImmediateContext.MapSubresource(vertexBuffer, 0, MapMode.WriteNoOverwrite, SlimDX.Direct3D11.MapFlags.None);
+            _box = Master.I.device11.ImmediateContext.MapSubresource(_vertexBuffer, 0, MapMode.WriteNoOverwrite, SlimDX.Direct3D11.MapFlags.None);
             // Texture
             Texture2D texture2D = Texture2D.FromFile(Master.I.device11, "yoda.jpg");
             ShaderResourceView view = new ShaderResourceView(Master.I.device11, texture2D);
 
-            effect.GetVariableByName("yodaTexture").AsResource().SetResource(view);
+            _effect.GetVariableByName("yodaTexture").AsResource().SetResource(view);
 
         }
 
         public override void Unload()
         {
-            Master.I.device11.ImmediateContext.UnmapSubresource(vertexBuffer, 0);
-            layout.Dispose();
-            effect.Dispose();
+            Master.I.device11.ImmediateContext.UnmapSubresource(_vertexBuffer, 0);
+            _layout.Dispose();
+            _effect.Dispose();
         }
     }
 }
