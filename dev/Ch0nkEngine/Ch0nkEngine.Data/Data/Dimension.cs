@@ -51,7 +51,7 @@ namespace Ch0nkEngine.Data.Data
             foreach (Ch0nk ch0Nk in _chonks.Values)
             {
                 //if the ch0nk bounding box intersects, then go deeper
-                if (ch0Nk.BoundingBox.Intersects(boundingShape))
+                if (ch0Nk.BoundingCube.Intersects(boundingShape))
                     ch0Nk.ChangeMaterial(boundingShape, material);
             }
         }

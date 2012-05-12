@@ -212,10 +212,10 @@ namespace Ch0nkEngine.Data.Data
         public void ChangeMaterial(BoundingShape boundingShape, IMaterial material, Ch0nk ch0Nk, Vector3b startLocation)
         {
             Vector3i treeAbsolutePosition = ch0Nk.Position + startLocation;
-            BoundingBox treeBoundingBox = new BoundingBox(treeAbsolutePosition, Size);
+            BoundingCube treeBoundingBox = new BoundingCube(treeAbsolutePosition, Size);
 
-            if (_children == null && boundingShape.Encloses(treeBoundingBox) && Size > 1)
-                Console.WriteLine("GOT IT");
+            //if (_children == null && boundingShape.Encloses(treeBoundingBox) && Size > 1)
+                //Console.WriteLine("GOT IT");
 
             if ((Size == 1) || (_children == null && boundingShape.Encloses(treeBoundingBox)))
             {
@@ -228,14 +228,15 @@ namespace Ch0nkEngine.Data.Data
                         for (int k = 0; k < 2; k++)
                         {
                             Vector3i childAbsolutePosition = ch0Nk.Position + startLocation + new Vector3b(i * _middle, j * _middle, k * _middle);
-                            BoundingBox childBoundingBox = new BoundingBox(childAbsolutePosition, _middle);
+                            BoundingCube childBoundingBox = new BoundingCube(childAbsolutePosition, _middle);
                             if (childBoundingBox.Intersects(boundingShape))
                             {
                                 if (_children == null)
                                     _children = new EightFoldTree[2, 2, 2];
 
                                 if (_children[i, j, k] == null)
-                                    _children[i, j, k] = new EightFoldTree(_middle, material);
+                                    _children[i, j, k] = new EightFoldTree(_middle, _material);
+
                                 _children[i, j, k].ChangeMaterial(boundingShape, material, ch0Nk, startLocation + new Vector3b(i * _middle, j * _middle, k * _middle));
                             }
                         }
@@ -273,11 +274,6 @@ namespace Ch0nkEngine.Data.Data
         public byte Size
         {
             get { return (byte)(_middle > 0 ? (_middle * 2) : 1); }
-        }
-
-        public BoundingBox GetBoundingCube(Ch0nk ch0Nk, Vector3b startLocation)
-        {
-            return new BoundingBox(ch0Nk.Position + new Vector3i(startLocation.X, startLocation.Y, startLocation.Z), Size);
         }
 
         

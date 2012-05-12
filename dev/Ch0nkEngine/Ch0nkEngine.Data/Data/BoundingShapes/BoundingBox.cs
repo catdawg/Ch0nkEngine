@@ -8,8 +8,8 @@ namespace Ch0nkEngine.Data.Data.BoundingShapes
 {
     public class BoundingBox : BoundingShape
     {
-        private readonly Vector3i _min;
-        private readonly Vector3i _max;
+        protected readonly Vector3i _min;
+        protected readonly Vector3i _max;
 
         public BoundingBox(Vector3i min, Vector3i max)
         {
@@ -55,7 +55,7 @@ namespace Ch0nkEngine.Data.Data.BoundingShapes
                     (_min.Z < boundingBox._max.Z) && (_max.Z > boundingBox._min.Z);
         }
 
-        private bool IntersectsSphere(BoundingSphere boundingSphere)
+        protected virtual bool IntersectsSphere(BoundingSphere boundingSphere)
         {
             //if (Center.DistanceTo(boundingSphere.Center) < (_size / 2 + boundingSphere.Radius))
             //    return true;

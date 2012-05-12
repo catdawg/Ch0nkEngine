@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework;
 using SXL.Cameras;
 using Simplicit.Net.Lzo;
 using BoundingBox = Ch0nkEngine.Data.Data.BoundingShapes.BoundingBox;
+using BoundingSphere = Ch0nkEngine.Data.Data.BoundingShapes.BoundingSphere;
 
 namespace Ch0nkEngine.XNAViewer
 {
@@ -44,12 +45,15 @@ namespace Ch0nkEngine.XNAViewer
         {
             _realm = new Realm();
 
-            _realm.Dimensions[0].ChangeMaterial(new BoundingBox(new Vector3i(0,0,10),32), new SandMaterial());
+            //new BoundingBox(new Vector3i(0,0,10),32)
+            _realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(32,32,64), 20), new AirMaterial());
+            _realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(0, 32, 64), 20), new SandMaterial());
+            _realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(0, 64, 32), 20), new StoneMaterial());
 
             List<Block> blocks = _realm.Dimensions[0].GetAllBlocks();
-
             
             _buffer = new DrawableBuffer(game, blocks);
+            
         }
 
 

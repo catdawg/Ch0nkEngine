@@ -86,9 +86,14 @@ namespace Ch0nkEngine.Data.Data
             return Ch0nksFolder + "Ch0nk(" + location.X + "," + location.Y + "," + location.Z + ").ch0nk";
         }
 
-        public BoundingBox BoundingBox
+        public BoundingCube BoundingCube
         {
-            get{return new BoundingBox(_position,Size);}
+            get { return new BoundingCube(_position, Size); }
+        }
+
+        public Dimension Dimension
+        {
+            get { return _dimension; }
         }
 
         public void ChangeMaterial(BoundingShape boundingShape, IMaterial material)
