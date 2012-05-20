@@ -41,16 +41,25 @@ namespace Ch0nkEngine.XNAViewer
             }
         }
 
+        private Dimension _dimension;
+        private Game _game;
+
         public Ch0nkWorld(Game game)
         {
             _realm = new Realm();
 
-            //new BoundingBox(new Vector3i(0,0,10),32)
-            _realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(32,32,64), 20), new AirMaterial());
-            _realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(0, 32, 64), 20), new SandMaterial());
-            _realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(0, 64, 32), 20), new StoneMaterial());
+            _dimension = _realm.Dimensions[0];
 
-            List<Block> blocks = _realm.Dimensions[0].GetAllBlocks();
+            //_dimension.GenerateAt(new Vector3i(0, 0, 0));
+
+            _game = game;
+
+            //new BoundingBox(new Vector3i(0,0,10),32)
+            //_realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(32,32,64), 20), new AirMaterial());
+            //_realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(0, 32, 64), 20), new SandMaterial());
+            //_realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(0, 64, 32), 20), new StoneMaterial());
+
+            List<Block> blocks = _dimension.GetAllBlocks();
             
             _buffer = new DrawableBuffer(game, blocks);
             
@@ -59,7 +68,12 @@ namespace Ch0nkEngine.XNAViewer
 
         public void MouseClick(Camera camera)
         {
-            Ray ray = new Ray(camera.Position, camera.Direction);
+            //Ray ray = new Ray(camera.Position, camera.Direction);
+            _dimension.GenerateAt(new Vector3i((int)camera.Position.X, (int)camera.Position.Y, (int)camera.Position.Z));
+
+            List<Block> blocks = _dimension.GetAllBlocks();
+
+            _buffer = new DrawableBuffer(_game, blocks);
         }
 
         public void MouseMiddleClick(Camera camera)
@@ -73,7 +87,6 @@ namespace Ch0nkEngine.XNAViewer
         public void Update(GameTime gameTime)
         {
             
-
         }
 
         public void Draw(GameTime gameTime, Camera camera)

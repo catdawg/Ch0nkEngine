@@ -55,5 +55,37 @@ namespace Ch0nkEngine.Data.Data
                     ch0Nk.ChangeMaterial(boundingShape, material);
             }
         }
+
+        public void GenerateAt(Vector3i center)
+        {
+            Vector3i centerChonkLocation = GetLowestEnclosingCh0nkLocation(center);
+            //Vector3i centerChonkLocation = new Vector3i(center.X / Ch0nk.Size, center.Y / Ch0nk.Size, center.Y / Ch0nk.Size);
+
+            for(int i=-1; i <= 1;i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    for (int k = -1; k <= 1; k++)
+                    {
+                        Vector3i neighbourCh0Nk = new Vector3i(centerChonkLocation.X + i * Ch0nk.Size, centerChonkLocation.Y + j * Ch0nk.Size, centerChonkLocation.Z + k * Ch0nk.Size);
+                        if (!_chonks.ContainsKey(neighbourCh0Nk))
+                            GenerateBlock(neighbourCh0Nk);
+                    }
+                }
+            }
+                    
+
+        }
+
+        private Vector3i GetLowestEnclosingCh0nkLocation(Vector3i center)
+        {
+            int x = ((center.X / Ch0nk.Size)) * Ch0nk.Size;
+            int y = ((center.Y / Ch0nk.Size)) * Ch0nk.Size;
+            int z = ((center.Z / Ch0nk.Size)) * Ch0nk.Size;
+
+            return new Vector3i(x <= center.X ? x : x - Ch0nk.Size, y <= center.Y ? y : y - Ch0nk.Size, z <= center.Z ? z : z - Ch0nk.Size);
+        }
+
+        protected abstract void GenerateBlock(Vector3i startLocation);
     }
 }

@@ -30,6 +30,20 @@ namespace Ch0nkEngine.Data.Data.Dimensions
             }*/
         }
 
-
+        protected override void GenerateBlock(Vector3i startLocation)
+        {
+            if (startLocation.X + startLocation.Y > 5 && startLocation.Z <= 0)
+            {
+                _chonks.Add(startLocation, new Ch0nk(this, startLocation, new StoneMaterial()));
+            }
+            else if(startLocation.Z <= 0)
+            {
+                _chonks.Add(startLocation, new Ch0nk(this, startLocation, new GrassMaterial()));
+            }
+            else
+            {
+                _chonks.Add(startLocation, new Ch0nk(this, startLocation, new AirMaterial()));
+            }
+        }
     }
 }

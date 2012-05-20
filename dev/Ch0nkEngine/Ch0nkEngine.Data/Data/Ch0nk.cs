@@ -25,7 +25,7 @@ namespace Ch0nkEngine.Data.Data
             _dimension = dimension;
             _position = position;
             _eightFoldTree = new EightFoldTree(Size, material);
-            _eightFoldTree[0, 0, 0] = new SandMaterial();
+            //_eightFoldTree[0, 0, 0] = new SandMaterial();
         }
 
         public Vector3i Position

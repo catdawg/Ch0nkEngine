@@ -129,5 +129,28 @@ namespace Ch0nkEngine.Data.Basic
 
             return (float)Math.Sqrt(dx * dx + dy * dy + dz * dz);
         }
+
+        public bool Equals(Vector3i other)
+        {
+            return other._x == _x && other._y == _y && other._z == _z;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (obj.GetType() != typeof (Vector3i)) return false;
+            return Equals((Vector3i) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int result = _x;
+                result = (result*397) ^ _y;
+                result = (result*397) ^ _z;
+                return result;
+            }
+        }
     }
 }

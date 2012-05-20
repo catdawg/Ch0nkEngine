@@ -97,7 +97,7 @@ VertexShaderOutput InstancingVS(VertexShaderInput input, float4 instanceData : T
 	//gets the xyz position from the instanceData xyz coordinates
 	//and gets the size of the block from the w coordinate
 	float4 instancePosition = instanceData;
-	float4 scaledPosition = input.Position * instanceData.w;
+	float4 scaledPosition = input.Position * instanceData.w*2;
 	instancePosition.w = scaledPosition.w = 1;
 
 	float4 worldPosition = scaledPosition + instancePosition;

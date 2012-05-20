@@ -54,7 +54,7 @@ namespace Ch0nkEngine.XNAViewer
         /// </summary>
         protected override void Initialize()
         {
-            _camera = new TargetCamera(_graphics) { Position = new Vector3(0, -25, 0), Target = new Vector3(0, 0, 0), UpVector = Vector3.UnitZ, FarPlaneDistance = 10000, NearPlaneDistance = 1 };
+            _camera = new TargetCamera(_graphics) { Position = new Vector3(64, 0, 64), Target = new Vector3(0, 0, 0), UpVector = Vector3.UnitZ, FarPlaneDistance = 10000, NearPlaneDistance = 1 };
             _camera.Initialize();
             _camera.AddComponent(new CrosshairComponent("Crosshairs/Crosshair01"));
             _camera.AddComponent(new KeyboardComponent { Speed = 1 });
