@@ -2,6 +2,8 @@
 using Ch0nkEngine.Data.Basic;
 using Ch0nkEngine.Data.Data.BoundingShapes;
 using Ch0nkEngine.Data.Data.Materials;
+using Ch0nkEngine.Data.Data.Materials.Types;
+using ImageTools.Core;
 
 namespace Ch0nkEngine.Data.Data
 {
@@ -75,6 +77,39 @@ namespace Ch0nkEngine.Data.Data
             }
                     
 
+        }
+
+
+        public List<Block> GetRandomTestingBlocks(Vector3i startingPosition)
+        {
+            List<Block> blocks = new List<Block>();
+            PerlinNoise noise = new PerlinNoise(99);
+
+            Ch0nk c = new Ch0nk(this, startingPosition, new GrassMaterial());
+
+            for (int i = 0; i < 64; i++)
+            {
+                for (int j = 0; j < 64; j++)
+                {
+                    for (int k = 0; k < 64; k++)
+                    {
+                        double d = noise.Noise(i + 0.5, j + 0.5, k + 0.5);
+                        //Console.WriteLine(d);
+                        IMaterial material = new GrassMaterial();
+
+                        if (d > 0.5)
+                            material = new GrassMaterial();
+                        else if (d > 0.0)
+                            material = new SandMaterial();
+                        else if (d > -0.5)
+                            material = new StoneMaterial();
+
+                        blocks.Add(new Block(c, new Vector3b(i, j, k), material, 1));
+                    }
+                }
+            }
+
+            return blocks;
         }
 
         private Vector3i GetLowestEnclosingCh0nkLocation(Vector3i center)

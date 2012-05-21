@@ -6,9 +6,11 @@ using System.Runtime.InteropServices;
 using Ch0nkEngine.Data;
 using Ch0nkEngine.Data.Basic;
 using Ch0nkEngine.Data.Data;
+using Ch0nkEngine.Data.Data.Materials;
 using Ch0nkEngine.Data.Data.Materials.Types;
 using Ch0nkEngine.Data.Utils;
 using Ch0nkEngine.XNAViewer.Drawing;
+using ImageTools.Core;
 using Microsoft.Xna.Framework;
 using SXL.Cameras;
 using Simplicit.Net.Lzo;
@@ -54,12 +56,16 @@ namespace Ch0nkEngine.XNAViewer
 
             _game = game;
 
+            List<Block> blocks = _dimension.GetRandomTestingBlocks(new Vector3i());
+
             //new BoundingBox(new Vector3i(0,0,10),32)
             //_realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(32,32,64), 20), new AirMaterial());
             //_realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(0, 32, 64), 20), new SandMaterial());
             //_realm.Dimensions[0].ChangeMaterial(new BoundingSphere(new Vector3i(0, 64, 32), 20), new StoneMaterial());
 
-            List<Block> blocks = _dimension.GetAllBlocks();
+            //blocks = new List<Block>();
+            //blocks.Add(new Block(c, new Vector3b(0, 0, 0), new GrassMaterial(), 1));
+            //blocks = _dimension.GetAllBlocks();
             
             _buffer = new DrawableBuffer(game, blocks);
             

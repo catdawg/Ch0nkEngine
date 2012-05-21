@@ -57,6 +57,8 @@
     <Compile Include="Data\BoundingShapes\BoundingShape.cs" />
     <Compile Include="Data\Materials\Types\SandMaterial.cs" />
     <Compile Include="Data\Materials\Types\StoneMaterial.cs" />
+    <Compile Include="NoiseGenerators\PerlinNoise.cs" />
+    <Compile Include="NoiseGenerators\PerlinNoise2D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Serialization.cs" />
     <Compile Include="Basic\Vector3i.cs" />

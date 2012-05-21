@@ -95,6 +95,7 @@ namespace Ch0nkEngine
             var dimension = realm.Dimensions[0];
             {
                 dimension.ChangeMaterial(new Ch0nkEngine.Data.Data.BoundingShapes.BoundingSphere(new Vector3i(32, 32, 64), 20), new AirMaterial());
+                //var blocks = dimension.GetRandomTestingBlocks(new Vector3i());
                 var blocks = dimension.GetAllBlocks();
                 foreach(var block in blocks)
                 {

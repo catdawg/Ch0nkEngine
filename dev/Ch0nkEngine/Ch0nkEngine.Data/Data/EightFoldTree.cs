@@ -267,6 +267,35 @@ namespace Ch0nkEngine.Data.Data
             return blocks;
         }*/
 
+        private void CleanUp()
+        {
+            //if (_children == null)
+            //    return _material;
+
+            IMaterial commonMaterial = null;
+
+            for (int i = 0; i < 2; i++)
+                for (int j = 0; j < 2; j++)
+                    for (int k = 0; k < 2; k++)
+                    {
+                        var child = _children[i, j, k];
+
+                        if (child != null)
+                        {
+                            child.CleanUp();
+                            
+                            if(child._children == null && child._material == _material)
+                            {
+                                _children[i, j, k] = null;
+                            }
+                            else
+                            {
+                                commonMaterial = child._material;
+                            }
+                        }
+                    }
+        }
+
         /// <summary>
         /// The cube dimensions of the tree.
         /// 1 is the smallest dimension possible.
