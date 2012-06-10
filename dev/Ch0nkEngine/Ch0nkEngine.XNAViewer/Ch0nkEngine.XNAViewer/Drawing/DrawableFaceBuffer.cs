@@ -8,16 +8,16 @@ using Microsoft.Xna.Framework;
 
 namespace Ch0nkEngine.XNAViewer.Drawing
 {
-    public class DrawableBuffer
+    public class DrawableFaceBuffer
     {
-        private DrawableCubeCollection[] _cubeCollections;
+        private DrawableFaceCollection[] _cubeCollections;
 
-        public DrawableBuffer(Game game, params Block[] blocks)
+        public DrawableFaceBuffer(Game game, params Block[] blocks)
             : this(game, blocks.ToList())
         {
         }
 
-        public DrawableBuffer(Game game, IEnumerable<Block> blocks)
+        public DrawableFaceBuffer(Game game, IEnumerable<Block> blocks)
         {
             Dictionary<String, List<Block>> materialGroups = new Dictionary<string, List<Block>>();
             foreach (var block in blocks)
@@ -31,10 +31,10 @@ namespace Ch0nkEngine.XNAViewer.Drawing
                 materialGroups[block.Material.MaterialName].Add(block);
             }
 
-            List<DrawableCubeCollection> cubeCollections = new List<DrawableCubeCollection>();
+            List<DrawableFaceCollection> cubeCollections = new List<DrawableFaceCollection>();
             foreach (KeyValuePair<string, List<Block>> materialGroup in materialGroups)
             {
-                cubeCollections.Add(new DrawableCubeCollection(game, materialGroup.Key, materialGroup.Value));
+                cubeCollections.Add(new DrawableFaceCollection(game, materialGroup.Key, materialGroup.Value));
             }
 
             _cubeCollections = cubeCollections.ToArray();
@@ -42,7 +42,7 @@ namespace Ch0nkEngine.XNAViewer.Drawing
 
         public void Draw(GameTime gameTime, Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix, Vector3 cameraPosition, Vector3 cameraDirection)
         {
-            foreach (DrawableCubeCollection drawableCubeCollection in _cubeCollections)
+            foreach (DrawableFaceCollection drawableCubeCollection in _cubeCollections)
             {
                 drawableCubeCollection.Draw(gameTime, worldMatrix, viewMatrix, projectionMatrix, cameraPosition, cameraDirection);
             }

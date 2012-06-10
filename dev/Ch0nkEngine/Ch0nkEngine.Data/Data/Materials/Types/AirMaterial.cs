@@ -11,5 +11,15 @@
         {
             get { return 0; }
         }
+
+        public override bool Equals(object obj)
+        {
+            if(obj != null && obj is IMaterial)
+            {
+                return ((IMaterial) obj).MaterialName == MaterialName;
+            }
+
+            return false;
+        }
     }
 }

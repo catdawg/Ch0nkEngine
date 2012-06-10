@@ -16,5 +16,15 @@ namespace Ch0nkEngine.Data.Data.Materials.Types
         {
             get { return 3; }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj is IMaterial)
+            {
+                return ((IMaterial)obj).MaterialName == MaterialName;
+            }
+
+            return false;
+        }
     }
 }

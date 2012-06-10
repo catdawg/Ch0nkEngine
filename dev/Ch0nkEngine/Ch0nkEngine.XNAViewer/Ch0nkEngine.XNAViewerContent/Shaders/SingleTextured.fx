@@ -7,6 +7,8 @@ float3 DiffuseLightDirection = float3(1, 1, -1);
 float4 DiffuseColor = float4(1, 1, 1, 1);
 float DiffuseIntensity = 0.3;
 
+float3 CameraPosition = float3(1,1,1);
+float3 CameraDirection = float3(1,1,1);
 
 // TODO: add effect parameters here.
 
@@ -53,10 +55,10 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
     VertexShaderOutput output;
 
-    /*float4 worldPosition = mul(input.Position, World);
+    float4 worldPosition = mul(input.Position, World);
     float4 viewPosition = mul(worldPosition, View);
-    output.Position = mul(viewPosition, Projection);*/
-	output.Position = mul(input.Position, ViewProjectionMatrix);
+    output.Position = mul(viewPosition, Projection);
+	//output.Position = mul(input.Position, ViewProjectionMatrix);
 
     // TODO: add your vertex shader code here.
 	output.TextureCoordinate = input.TextureCoordinate;
@@ -97,13 +99,21 @@ VertexShaderOutput InstancingVS(VertexShaderInput input, float4 instanceData : T
 	//gets the xyz position from the instanceData xyz coordinates
 	//and gets the size of the block from the w coordinate
 	float4 instancePosition = instanceData;
-	float4 scaledPosition = input.Position * instanceData.w;
+	//float4 scaledPosition = input.Position * instanceData.w;
+	
+	float4 scaledPosition = input.Position;  //to try the z version
+	scaledPosition.z *= instanceData.w;      //to try the z version
+
+
+
 	instancePosition.w = scaledPosition.w = 1;
 
 	float4 worldPosition = scaledPosition + instancePosition;
 	float4 viewPosition = mul(worldPosition, View);
 	output.Position = mul(viewPosition, Projection);
-	output.TextureCoordinate = input.TextureCoordinate * instanceData.w;
+	//output.TextureCoordinate = input.TextureCoordinate * instanceData.w;  
+	output.TextureCoordinate = input.TextureCoordinate;
+	output.TextureCoordinate.y *= instanceData.w; //to try the z version
 	
 	float lightIntensity = dot(input.Normal, -DiffuseLightDirection);
     output.Color = saturate(DiffuseColor * lightIntensity*DiffuseIntensity);

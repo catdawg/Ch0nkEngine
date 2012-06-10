@@ -117,8 +117,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ch0nkWorld.cs" />
+    <Compile Include="Drawing\DrawableFaceBuffer.cs" />
     <Compile Include="Drawing\DrawableBuffer.cs" />
-    <Compile Include="Drawing\DrawableCube.cs" />
+    <Compile Include="Drawing\DrawableCubeCollection.cs" />
+    <Compile Include="Drawing\DrawableFaceCollection.cs" />
     <Compile Include="Drawing\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
